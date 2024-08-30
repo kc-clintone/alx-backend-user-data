@@ -23,21 +23,26 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         NotImplementedError
 
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
-class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class """
+def filter_datum(
+        fields: List[str], redaction: str, message: str, separator: str,
+        ) -> str:
+    """
+    Filtering log data
+    """
+    extract, replace = (patterns["extract"], patterns["replace"])
+    return re.sub(extract(fields, separator), replace(redaction), message)
 
-    def __init__(self, fields, redaction="***", separator=";"):
-        super().__init__()
-        self.fields = fields
-        self.redaction = redaction
-        self.separator = separator
 
-    def format(self, record):
-        message = super().format(record)
-        return filter_datum(self.fields, self.redaction, message, self.separator)
-
-def filter_datum(fields, redaction, message, separator):
-    """Return the log message with fields obfuscated."""
-    pattern = f"({'|'.join(fields)})=([^ {separator}]*)"
-    return re.sub(pattern, lambda m: f"{m.group(1)}={redaction}", message)
+def get_logger() -> logging.Logger:
+    """
+    Creating a new logger
+    """
+    new_logger = logging.getLogger("user_data")
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    new_logger.setLevel(logging.INFO)
+    new_logger.propagate = False
+    new_logger.addHandler(stream_handler)
+    return new_logger
