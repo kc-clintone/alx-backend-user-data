@@ -2,7 +2,6 @@
 """
 Let's do somr logfiltering.
 """
-
 import os
 import re
 import logging
@@ -27,7 +26,6 @@ def filter_datum(
     extract, replace = (patterns["extract"], patterns["replace"])
     return re.sub(extract(fields, separator), replace(redaction), message)
 
-
 def get_logger() -> logging.Logger:
     """
     This function creates a new logger for a new user.
@@ -39,7 +37,6 @@ def get_logger() -> logging.Logger:
     logger.propagate = False
     logger.addHandler(stream_handler)
     return logger
-
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """
@@ -59,7 +56,6 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     )
     return db_connect
 
-
 def main():
     """
     Logging user data and organising it in a table
@@ -78,10 +74,10 @@ def main():
                 zip(columns, data),
             )
             info = '{};'.format('; '.join(list(record)))
-            arguments = ("user_data", logging.INFO, None, None, info, None, None)
+            arguments = ("user_data", logging.INFO, None, None, info,
+                           None, None)
             logger = logging.LogRecord(*arguments)
             data_logger.handle(logger)
-
 
 class RedactingFormatter(logging.Formatter):
     """
