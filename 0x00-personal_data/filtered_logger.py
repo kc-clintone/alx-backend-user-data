@@ -24,10 +24,20 @@ class RedactingFormatter(logging.Formatter):
         NotImplementedError
 
 
-def filter_datum(fields, redaction, message, separator):
-    """
-    This function filters data
-    """
+class RedactingFormatter(logging.Formatter):
+    """ Redacting Formatter class """
 
+    def __init__(self, fields, redaction="***", separator=";"):
+        super().__init__()
+        self.fields = fields
+        self.redaction = redaction
+        self.separator = separator
+
+    def format(self, record):
+        message = super().format(record)
+        return filter_datum(self.fields, self.redaction, message, self.separator)
+
+def filter_datum(fields, redaction, message, separator):
+    """Return the log message with fields obfuscated."""
     pattern = f"({'|'.join(fields)})=([^ {separator}]*)"
     return re.sub(pattern, lambda m: f"{m.group(1)}={redaction}", message)
