@@ -14,8 +14,9 @@ class BasicAuth(Auth):
         Auth (class): Parent auth class
     """
 
-    def extract_base64_authorization_header(self, authorization_header: str
-            ) -> str:
+    def extract_base64_authorization_header(self,
+                                            authorization_header:
+                                            str) -> str:
         """Returns:
                   Base64 Auth header
         Args:
@@ -30,8 +31,8 @@ class BasicAuth(Auth):
         return authorization_header[6:]
 
     def decode_base64_authorization_header(self,
-                                           base64_authorization_header: str
-                                          ) -> str:
+                                           base64_authorization_header:
+                                           str) -> str:
         """Returns:
                  Decoded Base64 string
         Args:
@@ -49,8 +50,8 @@ class BasicAuth(Auth):
             return None
 
     def extract_user_credentials(self,
-                                 decoded_base64_authorization_header: str
-                                ) -> Tuple[str, str]:
+                                 decoded_base64_authorization_header:
+                                 str) -> Tuple[str, str]:
         """Extracts:
                 User's email and password from the B64 value.
         Args:
@@ -65,7 +66,7 @@ class BasicAuth(Auth):
         return tuple(decoded_base64_authorization_header.split(':', 1))
 
     def user_object_from_credentials(self, user_email: str,
-             user_pwd: str) -> TypeVar('User'):
+                                     user_pwd: str) -> TypeVar('User'):
         """Returns:
                User instance based on extracted email and password.
         Args:
