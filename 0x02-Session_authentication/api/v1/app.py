@@ -23,6 +23,14 @@ elif getenv('AUTH_TYPE') == "basic_auth":
     from api.v1.auth.basic_auth import BasicAuth
     auth = BasicAuth()
 
+if auth_type == 'session_auth':
+        auth = SessionAuth()
+
+if auth_type == 'session_exp_auth':
+        auth = SessionExpAuth()
+                
+if auth_type == 'session_db_auth':
+        auth = SessionDBAuth()
 
 @app.before_request
 def filter_request():
