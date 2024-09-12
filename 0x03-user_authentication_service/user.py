@@ -6,10 +6,10 @@ from sqlalchemy import String, Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
 
 
-the_base = declarative_base()
+Base = declarative_base()
 
 
-class User(the_base):
+class User(Base):
     """
     How the tabke will/shall look like
     """
