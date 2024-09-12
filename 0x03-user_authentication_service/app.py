@@ -19,20 +19,6 @@ def index() -> str:
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route("/users", methods=["POST"], strict_slashes=False)
-def users() -> str:
-    """POST /users
-    Return:
-        - Creating accounts for new users
-    """
-    email, password = request.form.get("email"), request.form.get("password")
-    try:
-        AUTH.register_user(email, password)
-        return jsonify({"email": email, "message": "user created"})
-    except ValueError:
-        return jsonify({"message": "email already registered"}), 400
-
-
 @app.route("/sessions", methods=["POST"], strict_slashes=False)
 def login() -> str:
     """POST /sessions
@@ -60,6 +46,20 @@ def logout() -> str:
         abort(403)
     AUTH.destroy_session(user.id)
     return redirect("/")
+
+
+@app.route("/users", methods=["POST"], strict_slashes=False)
+def users() -> str:
+    """POST /users
+    Return:
+        - Creating accounts for new users
+    """
+    email, password = request.form.get("email"), request.form.get("password")
+    try:
+        AUTH.register_user(email, password)
+        return jsonify({"email": email, "message": "user created"})
+    except ValueError:
+        return jsonify({"message": "email already registered"}), 400
 
 
 @app.route("/profile", methods=["GET"], strict_slashes=False)
