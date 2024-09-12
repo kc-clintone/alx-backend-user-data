@@ -32,7 +32,7 @@ class Auth:
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
-        """crrating and adding new user to the database.
+        """creating and adding new user to the database.
         """
         try:
             self._db.find_user_by(email=email)
@@ -93,13 +93,13 @@ class Auth:
         """
         usr = None
         try:
-            usr = self._db.find_user_by(email=email)
+            user = self._db.find_user_by(email=email)
         except NoResultFound:
-            usr = None
-        if usr is None:
+            user = None
+        if user is None:
             raise ValueError()
         token = _generate_uuid()
-        self._db.update_user(usr.id, reset_token=token)
+        self._db.update_user(user.id, reset_token=token)
         return token
 
     def update_password(self, reset_token: str, password: str) -> None:

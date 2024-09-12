@@ -42,9 +42,9 @@ def login() -> str:
     email, password = request.form.get("email"), request.form.get("password")
     if not AUTH.valid_login(email, password):
         abort(401)
-    sess_id = AUTH.create_session(email)
+    session_id = AUTH.create_session(email)
     res = jsonify({"email": email, "message": "logged in"})
-    res.set_cookie("session_id", sess_id)
+    res.set_cookie("session_id", session_id)
     return res
 
 
@@ -55,10 +55,10 @@ def logout() -> str:
         - Redirecting clients (home)
     """
     sess_id = request.cookies.get("session_id")
-    usr = AUTH.get_user_from_session_id(sess_id)
-    if usr is None:
+    user = AUTH.get_user_from_session_id(sess_id)
+    if user is None:
         abort(403)
-    AUTH.destroy_session(usr.id)
+    AUTH.destroy_session(user.id)
     return redirect("/")
 
 
@@ -69,10 +69,10 @@ def profile() -> str:
         - Getring profile info for a user.
     """
     sess_id = request.cookies.get("session_id")
-    usr = AUTH.get_user_from_session_id(sess_id)
-    if usr is None:
+    user = AUTH.get_user_from_session_id(sess_id)
+    if user is None:
         abort(403)
-    return jsonify({"email": usr.email})
+    return jsonify({"email": user.email})
 
 
 @app.route("/reset_password", methods=["POST"], strict_slashes=False)
@@ -97,7 +97,7 @@ def update_password() -> str:
     """PUT /reset_password
 
     Return:
-        - Updating passwards
+        - Updating passwords
     """
     email = request.form.get("email")
     token = request.form.get("reset_token")
